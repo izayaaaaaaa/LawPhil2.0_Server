@@ -1,11 +1,5 @@
 CREATE DATABASE lawDB;
 
-// ensures that only the localhost can access the database
-CREATE USER 'luxemburg'@'localhost' IDENTIFIED BY 'izaya';
-GRANT ALL ON lawDB.* TO 'luxemburg'@'localhost';
-CREATE USER 'luxemburg'@'127.0.0.1' IDENTIFIED BY 'izaya';
-GRANT ALL ON lawDB.* TO 'luxemburg'@'127.0.0.1';
-
 USE lawDB;
 
 CREATE TABLE users (
