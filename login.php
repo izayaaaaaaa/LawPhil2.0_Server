@@ -19,8 +19,8 @@
       } else {
         echo json_encode(['success' => false, 'message' => 'Login failed']);
       }
-  } else {
-    echo json_encode(['success' => false, 'message' => 'Missing username or password']);
-  }
+    } else {
+      echo json_encode(['success' => false, 'message' => 'Missing username or password']);
+    }
   }
 ?>
