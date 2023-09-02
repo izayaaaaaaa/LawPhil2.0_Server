@@ -11,9 +11,9 @@
       exit();
   }
 
-  $hostname = '192.168.100.7';
-  $username = 'luxemburg';
-  $password = 'izaya';
+  $hostname = '192.168.80.71';
+  $username = 'username';
+  $password = 'password';
   $dbname = 'lawdb';
   $port = 3306;
 
