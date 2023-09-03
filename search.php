@@ -1,3 +1,6 @@
+<!-- possible duplication can arise if i group entries by id on a model that has several law tables_to_search
+        -- use one table for all laws with the category distinction as a column -->
+
 <?php
 // Include the database connection script
 require('db.php');
