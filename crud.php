@@ -51,12 +51,15 @@
           echo json_encode(array("error" => "Error creating law: " . $e->getMessage()));
         }
       } else if ($action === 'updateLaw') { // update a law
-          // sanitize and validate the input data 
+          // Check if the required fields are provided
+          if (isset($requestData['id'], $requestData['title'], $requestData['category'], $requestData['content'])) {
+            // sanitize and validate the input data (you may need more validation) 
           $lawId = intval($requestData['id']);
           $title = filter_var($requestData['title']);
           $category = filter_var($requestData['category']);
           $content = filter_var($requestData['content']);
 
+try {
           // update the law in the database
           $stmt = $pdo->prepare("UPDATE laws SET title = :title, category = :category, content = :content WHERE id = :id");
           $stmt->bindParam(':title', $title, PDO::PARAM_STR);
@@ -65,6 +68,18 @@
           $stmt->bindParam(':id', $lawId, PDO::PARAM_INT);
           $stmt->execute();
           
+// check if any rows were affected (successful update)
+              if ($stmt->rowCount() > 0) {
+                  echo json_encode(array("message" => "Law updated successfully."));
+              } else {
+                  echo json_encode(array("error" => "Law with ID $lawId not found or no changes made."));
+              }
+            } catch (PDOException $e) {
+                echo json_encode(array("error" => "Error updating law: " . $e->getMessage()));
+            }
+          } else {
+              echo json_encode(array("error" => "Missing required parameters for updating law."));
+          }
       } else {
         echo json_encode(array("error" => "Unsupported action."));
       }
