@@ -1,6 +1,8 @@
 <?php
   header('Content-Type: application/json');
 
+  // crud.php
+
   require 'db.php';
 
   if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -92,20 +94,26 @@
     } else {
       echo json_encode(array("error" => "Action not specified in JSON data."));
     }
-  } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['action']) && $_GET['action'] === 'deleteLaw') {
-    // Delete a law by ID
-    if (isset($_GET['id'])) {
-      $lawId = intval($_GET['id']);
-      try {
-        $stmt = $pdo->prepare("DELETE FROM laws WHERE id = :id");
-        $stmt->bindParam(':id', $lawId, PDO::PARAM_INT);
-        $stmt->execute();
-        echo json_encode(array("message" => "Law deleted successfully."));
-      } catch (PDOException $e) {
-        echo json_encode(array("error" => "Error deleting law: " . $e->getMessage()));
+  } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Handle DELETE requests (delete law by ID)
+    if (isset($_GET['action']) && $_GET['action'] === 'deleteLaw') {
+      if (isset($_GET['id'])) {
+        $lawId = intval($_GET['id']);
+        try {
+          $stmt = $pdo->prepare("DELETE FROM laws WHERE id = :id");
+          $stmt->bindParam(':id', $lawId, PDO::PARAM_INT);
+          $stmt->execute();
+          if ($stmt->rowCount() > 0) {
+            echo json_encode(array("message" => "Law deleted successfully."));
+          } else {
+            echo json_encode(array("error" => "Law with ID $lawId not found or no changes made."));
+          }
+        } catch (PDOException $e) {
+          echo json_encode(array("error" => "Error deleting law: " . $e->getMessage()));
+        }
+      } else {
+          echo json_encode(array("error" => "Missing 'id' parameter for deleting law."));
       }
-    } else {
-      echo json_encode(array("error" => "Missing 'id' parameter for deleting law."));
     }
   }
 ?>
