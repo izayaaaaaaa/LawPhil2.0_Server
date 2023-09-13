@@ -15,7 +15,9 @@
       $user = $stmt->fetch();
 
       if ($user && password_verify($password, $user['password'])) {
-        echo json_encode(['success' => true, 'message' => 'Login successful']);
+        // Assuming your user table has a 'role' column
+        $role = $user['role'];
+        echo json_encode(['success' => true, 'message' => 'Login successful', 'role' => $role]);
       } else {
         echo json_encode(['success' => false, 'message' => 'Login failed']);
       }
@@ -23,4 +25,3 @@
       echo json_encode(['success' => false, 'message' => 'Missing username or password']);
     }
   }
-?>
