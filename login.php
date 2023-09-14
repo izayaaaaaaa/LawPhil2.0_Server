@@ -1,27 +1,28 @@
 <?php
-  // login.php
-  
-  require 'db.php';
+// login.php
 
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $requestData = json_decode(file_get_contents("php://input"), true);
+require 'db.php';
 
-    if (isset($requestData['username']) && isset($requestData['password'])) {
-      $username = $requestData['username'];
-      $password = $requestData['password'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $requestData = json_decode(file_get_contents("php://input"), true);
 
-      $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');
-      $stmt->execute([$username]);
-      $user = $stmt->fetch();
+  if (isset($requestData['username']) && isset($requestData['password'])) {
+    $username = $requestData['username'];
+    $password = $requestData['password'];
 
-      if ($user && password_verify($password, $user['password'])) {
-        // Assuming your user table has a 'role' column
-        $role = $user['role'];
-        echo json_encode(['success' => true, 'message' => 'Login successful', 'role' => $role]);
-      } else {
-        echo json_encode(['success' => false, 'message' => 'Login failed']);
-      }
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+
+    if ($user && password_verify($password, $user['password'])) {
+      // Assuming your user table has a 'role' column
+      $role = $user['role'];
+      $id = $user['id'];
+      echo json_encode(['success' => true, 'message' => 'Login successful', 'role' => $role, 'id' => $id]);
     } else {
-      echo json_encode(['success' => false, 'message' => 'Missing username or password']);
+      echo json_encode(['success' => false, 'message' => 'Login failed']);
     }
+  } else {
+    echo json_encode(['success' => false, 'message' => 'Missing username or password']);
   }
+}
