@@ -1,17 +1,15 @@
 <?php
-  // db.php
-
-  // Allow CORS from any origin
+// The code you provided is written in PHP and it sets up a connection to a MySQL database. 
   header("Access-Control-Allow-Origin: *");
   header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
   header("Access-Control-Allow-Headers: Content-Type");
 
-  if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-      http_response_code(200);
-      exit();
+  if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+    http_response_code(200);
+    exit;
   }
 
-  $hostname = '192.168.100.7';
+  $hostname = '192.168.100.19';
   $username = 'luxemburg';
   $password = 'izaya';
   $dbname = 'lawdb';
@@ -26,5 +24,4 @@
   } catch (PDOException $e) {
     error_log("Connection to database failed.\n", 3, $dbConnectionLog);
   }
-
-  // 
+?>
