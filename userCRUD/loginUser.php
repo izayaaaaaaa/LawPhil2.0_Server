@@ -1,7 +1,7 @@
 <?php
 // The code you provided is a PHP script that handles a POST request for user authentication. Here's a
 // breakdown of what the code does:
-
+  session_start();
   require '../db.php';
 
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -18,19 +18,20 @@
       if ($row) {
         // Verify hashed password
         if (password_verify($password, $row["password"])) {
+          $_SESSION['user_id'] = $row['id'];
+          $_SESSION['user_name'] = $row['username'];
+          $_SESSION['user_role'] = $row['role'];
+          // session_regenerate_id();
+
+          // var_dump($_SESSION);
+
           $response = [
             "success" => true,
             "id" => $row["id"],
             "email" => $email,
             "role" => $row["role"]
           ];
-
-          session_start();
-          $_SESSION["user_id"] = $row["id"];
-          $_SESSION["user_email"] = $email;
-          $_SESSION["user_role"] = $row["role"];
-          session_regenerate_id();
-
+          
           echo json_encode($response);
         } else {
           echo json_encode(["success" => false, "message" => "Invalid email or password"]);
