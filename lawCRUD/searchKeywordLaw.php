@@ -13,25 +13,25 @@
     // The table to search
     $table = "laws";
 
-$sql = "SELECT * FROM $table WHERE ";
+    $sql = "SELECT * FROM $table WHERE ";
 
-    if (!empty($category)) {
+    if (!empty($category) && $category !== 'all') {
       // Add category filtering
       $sql .= "category = :category AND ";
     }
 
     // Update the SQL query to consider search type
     if ($searchType === 'title') {
-            $sql .= "title LIKE :keyword";
-        } elseif ($searchType === 'content') {
-            $sql .= "content LIKE :keyword";
-        } else {
-      $sql .= "CONCAT(title, ' ', content) LIKE :keyword";
+      $sql .= "title LIKE :keyword";
+    } elseif ($searchType === 'content') {
+      $sql .= "content LIKE :keyword";
+    } else {
+      $sql .= "(title LIKE :keyword OR content LIKE :keyword)";
     }
     
     $stmt = $pdo->prepare($sql);
 
-    if (!empty($category)) {
+    if (!empty($category) && $category !== 'all') {
       $stmt->bindValue(':category', $category);
     }
     $stmt->bindValue(':keyword', '%' . $keyword . '%');
