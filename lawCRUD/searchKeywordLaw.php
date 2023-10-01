@@ -5,8 +5,7 @@
   // Keyword to search
   if (isset($_GET['searchQuery'])) {
     $keyword = $_GET['searchQuery'];
-    $category = isset($_GET['selectedCategory']) ? $_GET['selectedCategory'] : '';
-    $searchType = isset($_GET['searchType']) ? $_GET['searchType'] : 'both'; // Default search type is 'both'
+    $selectedCategories = isset($_GET['selectedCategories']) ? $_GET['selectedCategories'] : [];
 
     $results = array();
 
@@ -15,28 +14,25 @@
 
     $sql = "SELECT * FROM $table WHERE ";
 
-    if (!empty($category) && $category !== 'all') {
-      // Add category filtering
-      $sql .= "category = :category AND ";
+    if (!empty($selectedCategories) && !in_array('All', $selectedCategories)) {
+      // Add category filtering for selected categories
+      $sql .= "category IN (" . implode(',', array_fill(0, count($selectedCategories), '?')) . ") AND ";
     }
 
-    // Update the SQL query to consider search type
-    if ($searchType === 'title') {
-      $sql .= "title LIKE :keyword";
-    } elseif ($searchType === 'content') {
-      $sql .= "content LIKE :keyword";
-    } else {
-      $sql .= "(title LIKE :keyword OR content LIKE :keyword)";
-    }
+    $sql .= "content LIKE :keyword"; // Add the keyword condition
     
     $stmt = $pdo->prepare($sql);
 
-    if (!empty($category) && $category !== 'all') {
-      $stmt->bindValue(':category', $category);
+    if (!empty($selectedCategories) && !in_array('All', $selectedCategories)) {
+      // Bind values for selected categories
+      foreach ($selectedCategories as $category) {
+        $stmt->bindValue(':category', $category);
+      }
     }
+
     $stmt->bindValue(':keyword', '%' . $keyword . '%');
 
-        $stmt->execute();
+    $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $results[] = $row;
