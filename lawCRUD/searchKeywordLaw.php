@@ -2,37 +2,30 @@
   // searchKeywordLaw.php
   require '../db.php';
 
-  // Keyword to search
   if (isset($_GET['searchQuery'])) {
     $keyword = $_GET['searchQuery'];
     $selectedCategories = isset($_GET['selectedCategories']) ? $_GET['selectedCategories'] : [];
 
     $results = array();
-
-    // The table to search
     $table = "laws";
-
     $sql = "SELECT * FROM $table WHERE ";
 
     if (!empty($selectedCategories) && !in_array('All', $selectedCategories)) {
       // Add category filtering for selected categories
-      $sql .= "category IN (" . implode(',', array_fill(0, count($selectedCategories), '?')) . ") AND ";
+      $categoryPlaceholders = implode(', ', array_fill(0, count($selectedCategories), '?'));
+      $sql .= "category IN ($categoryPlaceholders) AND ";
     }
 
-    $sql .= "content LIKE :keyword"; // Add the keyword condition
-    
+    $sql .= "content LIKE ?"; // Add the keyword condition    
+
     $stmt = $pdo->prepare($sql);
 
     if (!empty($selectedCategories) && !in_array('All', $selectedCategories)) {
       // Bind values for selected categories
-      foreach ($selectedCategories as $category) {
-        $stmt->bindValue(':category', $category);
-      }
+      $stmt->execute(array_merge($selectedCategories, ["%$keyword%"]));
+    } else {
+      $stmt->execute(["%$keyword%"]);
     }
-
-    $stmt->bindValue(':keyword', '%' . $keyword . '%');
-
-    $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $results[] = $row;
