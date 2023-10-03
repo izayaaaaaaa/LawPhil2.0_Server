@@ -1,5 +1,5 @@
 <?php
-  require '../db.php';
+  require_once '../db.php';
 
   $lawID = $_GET['lawID'];
   $query = 'SELECT title, category, content FROM laws WHERE id = ?';

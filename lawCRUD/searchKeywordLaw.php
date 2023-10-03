@@ -1,6 +1,6 @@
 <?php
   // searchKeywordLaw.php
-  require '../db.php';
+  require_once '../db.php';
 
   if (isset($_GET['searchQuery'])) {
     $keyword = $_GET['searchQuery'];
