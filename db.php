@@ -10,7 +10,7 @@
     exit;
   }
 
-  $hostname = '192.168.100.19';
+  $hostname = '192.168.56.1';
   $username = 'luxemburg';
   $password = 'izaya';
   $dbname = 'lawdb';

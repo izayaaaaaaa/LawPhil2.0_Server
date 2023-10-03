@@ -1,4 +1,5 @@
 <?php
+// getLawsByCategory.php
   require_once '../db.php';
 
   // Get the category from the query parameter

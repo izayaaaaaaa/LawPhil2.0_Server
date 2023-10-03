@@ -1,4 +1,5 @@
 <?php
+// getSpecificLaw.php
   require_once '../db.php';
 
   $lawID = $_GET['lawID'];
