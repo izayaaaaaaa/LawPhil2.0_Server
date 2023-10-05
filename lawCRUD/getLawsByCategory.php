@@ -6,7 +6,7 @@
   $category = $_GET['category'];
 
   // Prepare a SQL query to fetch laws and subcategories based on the category
-  $sql = "SELECT title, subcategory FROM laws WHERE category = :category";
+  $sql = "SELECT id, title, subcategory FROM laws WHERE category = :category";
 
   try {
       $stmt = $pdo->prepare($sql);
