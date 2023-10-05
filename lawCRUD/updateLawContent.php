@@ -3,12 +3,10 @@
 
   $data = json_decode(file_get_contents("php://input"));
 
-  $query = "UPDATE laws SET title=:title, category=:category, content=:content WHERE id=:id";
+  $query = "UPDATE laws SET content=:content WHERE id=:id";
 
   $stmt = $pdo->prepare($query);
-  $stmt->bindParam(':title', $data->title);
-  $stmt->bindParam(':category', $data->category);
-  $stmt->bindParam(':content', $data->content);
+  $stmt->bindParam(':content', $data->content); // Update the bound variable to ':content'
   $stmt->bindParam(':id', $data->id);
 
   if ($stmt->execute()) {
