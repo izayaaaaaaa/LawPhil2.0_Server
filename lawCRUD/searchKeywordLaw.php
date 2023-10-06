@@ -10,32 +10,34 @@
     $table = "laws";
     $sql = "SELECT * FROM $table WHERE ";
 
+    $params = [];
+
     if (!empty($selectedCategories) && !in_array('All', $selectedCategories)) {
       // Add category filtering for selected categories
       $categoryPlaceholders = implode(', ', array_fill(0, count($selectedCategories), '?'));
       $sql .= "category IN ($categoryPlaceholders) AND ";
+
+      $params = $selectedCategories;
     }
 
-    $sql .= "content LIKE ?"; // Add the keyword condition    
+    $sql .= "content LIKE ?";
+    $params[] = "%$keyword%";    
 
-    $stmt = $pdo->prepare($sql);
+    try {
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute($params);
 
-    if (!empty($selectedCategories) && !in_array('All', $selectedCategories)) {
-      // Bind values for selected categories
-      $stmt->execute(array_merge($selectedCategories, ["%$keyword%"]));
-    } else {
-      $stmt->execute(["%$keyword%"]);
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      // Return JSON result with a response code
+      http_response_code(200);
+      echo json_encode($results);
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(["error" => "Error searching laws: " . $e->getMessage()]);
     }
-
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $results[] = $row;
-    }
-
-    // Return JSON result with a response code
-    http_response_code(200);
-    echo json_encode($results);
   } else {
-    http_response_code(400);
-    echo json_encode(array('error' => 'Bad Request'));
+    http_response_code(400); // Bad Request
+    echo json_encode(['error' => 'Bad Request']);
   }
 ?>

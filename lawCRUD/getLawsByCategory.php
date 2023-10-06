@@ -9,16 +9,16 @@
   $sql = "SELECT id, title, subcategory FROM laws WHERE category = :category";
 
   try {
-      $stmt = $pdo->prepare($sql);
-      $stmt->bindParam(':category', $category, PDO::PARAM_STR);
-      $stmt->execute();
-      $laws = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':category', $category, PDO::PARAM_STR);
+    $stmt->execute();
+    $laws = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-      // Return the laws as a JSON response
-      header('Content-Type: application/json');
-      echo json_encode($laws);
+    // Return the laws as a JSON response
+    header('Content-Type: application/json');
+    echo json_encode($laws);
   } catch (PDOException $e) {
-      // Handle database query error
-      die("Error fetching laws: " . $e->getMessage());
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => "Error fetching laws: " . $e->getMessage()]);
   }
 ?>
