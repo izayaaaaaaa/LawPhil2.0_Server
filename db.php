@@ -17,10 +17,14 @@
   $port = 3306;
 
   try {
-    $pdo = new PDO("mysql:host=$hostname; port=$port; dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$hostname;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password, [
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      PDO::ATTR_EMULATE_PREPARES => false,
+    ]);
     // echo("Connection successful.\n");
   } catch (PDOException $e) {
+    http_response_code(500); // Internal Server Error
     echo "Connection to database failed: " . $e->getMessage();
+    exit;
   }
 ?>
