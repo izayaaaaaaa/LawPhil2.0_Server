@@ -4,17 +4,23 @@
 
   $data = json_decode(file_get_contents("php://input"));
 
-  $query = "INSERT INTO laws SET title=:title, category=:category, content=:content";
+  $query = "INSERT INTO laws (title, category, subcategory, content) VALUES (:title, :category, :subcategory, :content)";
   $stmt = $pdo->prepare($query);
 
   $stmt->bindParam(':title', $data->title);
   $stmt->bindParam(':category', $data->category);
+  $stmt->bindParam(':subcategory', $data->subcategory);
   $stmt->bindParam(':content', $data->content);
 
+  $response = array();
+
   if ($stmt->execute()) {
+    $response['message'] = "Law was created.";
     http_response_code(200);
-    echo json_encode(array("message" => "Law was created."));
   } else {
+    $response['message'] = "Unable to create law.";
     http_response_code(400);
-    echo json_encode(array("message" => "Unable to create law."));
   }
+
+  echo json_encode($response);
+?>
