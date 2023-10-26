@@ -19,12 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (password_verify($password, $row["password"])) {
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['user_name'] = $row['username'];
+                $_SESSION['is_admin'] = $row['is_admin'];
                 // var_dump($_SESSION);
 
                 $response = [
                     "success" => true,
                     "id" => $row["id"],
                     "email" => $email,
+                    "is_admin" => $row["is_admin"]
                 ];
 
                 echo json_encode($response);
