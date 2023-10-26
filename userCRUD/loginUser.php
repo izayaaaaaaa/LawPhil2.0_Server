@@ -1,36 +1,32 @@
-<!-- loginUser.php -->
 <?php
+// loginUser.php
 session_start();
 require '../db.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = json_decode(file_get_contents("php://input"));
-    
+
     if (!empty($data->email) && !empty($data->password)) {
         $email = $data->email;
         $password = $data->password;
-        
+
         $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ?');
         $stmt->execute([$email]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($row) {
             // Verify hashed password
             if (password_verify($password, $row["password"])) {
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['user_name'] = $row['username'];
-                $_SESSION['user_role'] = $row['role'];
-                // session_regenerate_id();
-                
                 // var_dump($_SESSION);
-                
+
                 $response = [
                     "success" => true,
                     "id" => $row["id"],
                     "email" => $email,
-                    "role" => $row["role"]
                 ];
-                
+
                 echo json_encode($response);
             } else {
                 echo json_encode(["success" => false, "message" => "Invalid email or password"]);

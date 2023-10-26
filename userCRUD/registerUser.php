@@ -1,5 +1,5 @@
-<!-- registerUser.php -->
 <?php
+// registerUser.php
 require '../db.php';
 
 header("Content-Type: application/json");
