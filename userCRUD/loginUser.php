@@ -26,8 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     "success" => true,
                     "id" => $row["id"],
                     "email" => $email,
-                    "is_admin" => $row["is_admin"]
+                    "is_admin" => $row["is_admin"],
                 ];
+
+                session_regenerate_id(true);
 
                 echo json_encode($response);
             } else {
