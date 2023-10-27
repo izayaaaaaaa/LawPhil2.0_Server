@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: http://localhost:3000");
+
 // Your logout script
 session_start();
 $_SESSION = array(); // Destroy all session data
